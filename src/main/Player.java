@@ -2,6 +2,7 @@ public class Player {
     public Hand hand = new Hand();
     public int bet = 0;
     boolean bust = false;
+    
     public void hit(Card card) {
         hand.setCard(card);
     }
@@ -15,7 +16,7 @@ public class Player {
     }
 
     public void raiseBet(int amount) {
-        bet = bet + amount;
+        bet = bet + Math.abs(amount);
     }
 
 }

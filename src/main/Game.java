@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.Scanner;
 
 
@@ -25,52 +26,99 @@ public class Game {
 
             int amount = KBIn.nextInt();
 
-            players[i].raiseBet(Math.abs(amount));
+            players[i].raiseBet(amount);
         }
         clear();
 
         dealer.hit(deck.getCard());
 
-        for (int i = 0; i < 3; i++) {
-            System.out.println("Player " + (i + 1));
+        //TODO: Allow the dealer to bust.
+        while (dealer.sum()[0] <= 17 && dealer.sum()[1] <= 17) {
+            dealer.hit(deck.getCard());
+            for (int i = 0; i < 3; i++) {
+                if (players[i].bust) { //Skip players who have lost.
+                    continue; //! Probably not the best solution!
+                }
+                System.out.print("\u001b[30;41m");
+                System.out.println("Dealer's cards:");
+                dealer.hand.display();
 
-            System.out.print("Your bet: " + players[i].bet);
+                int dealerScores[] = new int[2];
+                dealerScores[0] = dealer.sum()[0];
+                dealerScores[1] = dealer.sum()[1];
+                
+                if (dealerScores[0] != dealerScores[1] && dealerScores[1] <= 21) {
+                    System.out.println("Dealer\'s score: " + dealerScores[0] + " or " + dealerScores[1]);
+                }
+                else {
+                    System.out.println("Dealer\'s score: " + dealerScores[0]);
+                }
 
-            System.out.println("Dealer's cards:");
-            dealer.hand.display();
+                switch (i) {
+                    case 0: System.out.print("\u001b[33;40m"); break;
+                    case 1: System.out.print("\u001b[32;40m"); break;
+                    case 2: System.out.print("\u001b[94;40m"); break;
+                }
+                System.out.println("\nPlayer " + (i + 1));
+    
+                System.out.println("Your bet: " + players[i].bet);
+    
+                System.out.println("\nYour cards:");
+                players[i].hand.display();
+                int scores[] = new int[2];
+                scores[0] = players[i].sum()[0];
+                scores[1] = players[i].sum()[1];
+    
+                System.out.print("\n");
+                if (scores[0] != scores[1] && scores[1] <= 21) {
+                    System.out.println("Your score is: " + scores[0] + " or " + scores[1]);
+                }
+                else {
+                    System.out.println("Your score is: " + scores[0]);
+                }
+    
+                System.out.println("Options:");
+                System.out.println("1. Hit:");
+                System.out.println("2. Stand");
+                System.out.println("3. Raise bet");
+    
+                int choice = KBIn.nextInt();
+    
+                switch (choice) {
+                    case 1: players[i].hit(deck.getCard()); break;
+                    case 3:
+                        System.out.print("Amount: ");
+                        int amount = KBIn.nextInt();
+                        players[i].raiseBet(amount);
+                        break;
+                }
+                
+                if (players[i].sum()[0] > 21) {
+                    players[i].bust = true;
+                }
 
-            System.out.println("\nYour cards:");
-            players[i].hand.display();
-            int scores[] = new int[2];
-            scores[0] = players[i].sum()[0];
-            scores[1] = players[i].sum()[1];
-
-            System.out.print("\n");
-            if (scores[0] != scores[1] && scores[1] <= 21) {
-                System.out.println("Your score is: " + scores[0] + " or " + scores[1]);
+                clear();
             }
-            else {
-                System.out.println("Your score is: " + scores[0]);
-            }
-
-            System.out.println("Options:");
-            System.out.println("1. Hit:");
-            System.out.println("2. Stand");
-            System.out.println("3. Raise bet");
-
-            int choice = KBIn.nextInt();
-
-            switch (choice) {
-                case 1: players[i].hit(deck.getCard()); break;
-                case 2: break;
-                case 3:
-                    
-            }
-
-            clear();
         }
+        System.out.print("\u001bc");
+        for (int i = 0; i < 3; i++) {
+            if (!players[i].bust) {
+                int dealerScores[] = new int[2];
+                dealerScores[0] = dealer.sum()[0];
+                dealerScores[1] = dealer.sum()[1];
 
+                int scores[] = new int[2];
+                scores[0] = players[i].sum()[0];
+                scores[1] = players[i].sum()[1];
+
+                if (scores[0] > dealerScores[0] || scores[1] > dealerScores[1])
+                System.out.println("Player " + (i + 1) + " got back " + players[i].bet*1.5);
+            }
+        }
     }
+
+    
+
     void clear() {
         System.out.print("\u001b[2J");
         System.out.print("\u001b[0;0H");
