@@ -31,9 +31,7 @@ class Main {
 
         dealer.hit(deck.getCard());
 
-        //TODO: Allow the dealer to bust.
-        while (dealer.sum()[0] <= 17 && dealer.sum()[1] <= 17) {
-            dealer.hit(deck.getCard());
+        do {
             for (int i = 0; i < 3; i++) {
                 if (players[i].bust) { //Skip players who have lost.
                     continue; //! Probably not the best solution!
@@ -57,6 +55,7 @@ class Main {
                     case 0: System.out.print("\u001b[33;40m"); break;
                     case 1: System.out.print("\u001b[32;40m"); break;
                     case 2: System.out.print("\u001b[94;40m"); break;
+                    
                 }
                 System.out.println("\nPlayer " + (i + 1));
     
@@ -75,21 +74,24 @@ class Main {
                 else {
                     System.out.println("Your score is: " + scores[0]);
                 }
-    
-                System.out.println("Options:");
-                System.out.println("1. Hit:");
-                System.out.println("2. Stand");
-                System.out.println("3. Raise bet");
-    
-                int choice = KBIn.nextInt();
-    
-                switch (choice) {
-                    case 1: players[i].hit(deck.getCard()); break;
-                    case 3:
-                        System.out.print("Amount: ");
-                        int amount = KBIn.nextInt();
-                        players[i].raiseBet(amount);
-                        break;
+                if (!(scores[0] == 21 || scores[1] == 21)) {
+                    System.out.println("Options:");
+                    System.out.println("1. Hit");
+                    System.out.println("2. Stand");
+                    System.out.println("3. Raise bet");
+        
+                    int choice = KBIn.nextInt();
+        
+                    switch (choice) {
+                        case 1: players[i].hit(deck.getCard()); break;
+                        case 2: break;
+                        case 3:
+                            System.out.print("Amount: ");
+                            int amount = KBIn.nextInt();
+                            players[i].raiseBet(amount);
+                            break;
+                        default: System.out.print("ERROR"); return; //TODO: Add better input handling
+                    }
                 }
                 
                 if (players[i].sum()[0] > 21) {
@@ -98,7 +100,12 @@ class Main {
 
                 clear();
             }
-        }
+            dealer.hit(deck.getCard());
+            if (dealer.sum()[0] > 21) {
+                System.out.println("The Dealer busted!");
+                return;
+            }
+        } while(dealer.sum()[0] <= 17 && dealer.sum()[1] <= 17);
         System.out.print("\u001bc");
         for (int i = 0; i < 3; i++) {
             if (!players[i].bust) {
@@ -110,8 +117,9 @@ class Main {
                 scores[0] = players[i].sum()[0];
                 scores[1] = players[i].sum()[1];
 
-                if (scores[0] > dealerScores[0] || scores[1] > dealerScores[1])
-                System.out.println("Player " + (i + 1) + " got back " + players[i].bet*1.5);
+                if (scores[0] > dealerScores[0] || scores[1] > dealerScores[0]) {
+                    System.out.println("Player " + (i + 1) + " got back " + players[i].bet*1.5);
+                }
             }
         }
     }
