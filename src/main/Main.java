@@ -1,10 +1,12 @@
 import java.io.IOException;
 import java.util.Scanner;
+import javafx.application.Application; 
 
 //TODO: Add the ability to split, this will be a little complicated because there are specific rules and the player will have two hands.
 
 class Main {
     public static void main(String[] args) {
+        Application.launch(FXtest.class, args);/*
         Deck deck = new Deck();
         Player dealer = new Player();
         Player players[] = new Player[3];
@@ -121,7 +123,7 @@ class Main {
                     System.out.println("Player " + (i + 1) + " got back " + players[i].bet*1.5);
                 }
             }
-        }
+        }*/
     }
 
     
