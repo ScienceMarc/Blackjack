@@ -2,6 +2,7 @@ public class Player {
     public Hand hand = new Hand();
     public int bet = 0;
     boolean bust = false;
+    boolean standing = false;
     
     public void hit(Card card) {
         hand.setCard(card);

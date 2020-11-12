@@ -74,7 +74,7 @@ class Main {
                 else {
                     System.out.println("Your score is: " + scores[0]);
                 }
-                if (!(scores[0] == 21 || scores[1] == 21)) {
+                if (!players[i].standing) {
                     System.out.println("Options:");
                     System.out.println("1. Hit");
                     System.out.println("2. Stand");
@@ -84,7 +84,7 @@ class Main {
         
                     switch (choice) {
                         case 1: players[i].hit(deck.getCard()); break;
-                        case 2: break;
+                        case 2: players[i].standing = true; break;
                         case 3:
                             System.out.print("Amount: ");
                             int amount = KBIn.nextInt();
@@ -106,7 +106,7 @@ class Main {
                 return;
             }
         } while(dealer.sum()[0] <= 17 && dealer.sum()[1] <= 17);
-        System.out.print("\u001bc");
+        System.out.println("\u001bcGame Over");
         for (int i = 0; i < 3; i++) {
             if (!players[i].bust) {
                 int dealerScores[] = new int[2];
